@@ -1,0 +1,97 @@
+{
+  "generated_at": "2026-08-10T04:12:24Z",
+  "api_latency_ms": {
+    "GET /": {
+      "count": 15,
+      "avg_ms": 1.888,
+      "p95_ms": 2.942,
+      "min_ms": 1.359,
+      "max_ms": 4.623
+    },
+    "GET /models": {
+      "count": 15,
+      "avg_ms": 5.354,
+      "p95_ms": 18.003,
+      "min_ms": 1.353,
+      "max_ms": 52.405
+    },
+    "POST /predict": {
+      "count": 15,
+      "avg_ms": 93.269,
+      "p95_ms": 116.401,
+      "min_ms": 83.31,
+      "max_ms": 156.858
+    },
+    "POST /predict-batch": {
+      "count": 15,
+      "avg_ms": 264.081,
+      "p95_ms": 274.4,
+      "min_ms": 252.997,
+      "max_ms": 278.277
+    }
+  },
+  "realtime_stream": {
+    "frames": 90,
+    "elapsed_seconds": 7.541,
+    "stream_fps": 11.934,
+    "frame_latency": {
+      "count": 90,
+      "avg_ms": 82.739,
+      "p95_ms": 91.955,
+      "min_ms": 75.3,
+      "max_ms": 102.4
+    }
+  },
+  "load_stress": {
+    "requested_concurrent_feeds": 4,
+    "frames_per_feed": 45,
+    "fully_successful_feeds": 4,
+    "max_concurrent_feeds_handled": 4,
+    "uptime_percent": 100.0,
+    "aggregate_stream_fps": 50.717
+  },
+  "runtime_metrics_snapshot": {
+    "http_latency": {
+      "GET /": {
+        "count": 15,
+        "avg_ms": 0.73,
+        "p95_ms": 1.61,
+        "min_ms": 0.4,
+        "max_ms": 2.64
+      },
+      "GET /models": {
+        "count": 15,
+        "avg_ms": 4.16,
+        "p95_ms": 16.11,
+        "min_ms": 0.53,
+        "max_ms": 51.14
+      },
+      "POST /predict": {
+        "count": 15,
+        "avg_ms": 90.79,
+        "p95_ms": 113.81,
+        "min_ms": 80.05,
+        "max_ms": 154.84
+      },
+      "POST /predict-batch": {
+        "count": 15,
+        "avg_ms": 261.04,
+        "p95_ms": 271.44,
+        "min_ms": 248.61,
+        "max_ms": 275.27
+      }
+    },
+    "streaming": {
+      "websocket_sessions": 5,
+      "websocket_frames_processed": 270,
+      "avg_stream_fps": 12.72,
+      "frame_latency": {
+        "count": 270,
+        "avg_ms": 78.72,
+        "p95_ms": 94.31,
+        "min_ms": 61.2,
+        "max_ms": 115.1
+      }
+    }
+  }
+}

@@ -1,0 +1,1324 @@
+{
+ "size": [
+  640,
+  480
+ ],
+ "classes": [
+  "crack",
+  "dent",
+  "corrosion",
+  "scratch",
+  "missing-head",
+  "paint-peel-off"
+ ],
+ "images": [
+  {
+   "file": "panel_000.jpg",
+   "defects": [
+    {
+     "class": "scratch",
+     "bbox": [
+      197,
+      148,
+      353,
+      175
+     ]
+    },
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      362,
+      193,
+      404,
+      243
+     ]
+    },
+    {
+     "class": "scratch",
+     "bbox": [
+      204,
+      429,
+      315,
+      482
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_001.jpg",
+   "defects": [
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      436,
+      306,
+      496,
+      369
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_002.jpg",
+   "defects": [
+    {
+     "class": "scratch",
+     "bbox": [
+      201,
+      266,
+      630,
+      327
+     ]
+    },
+    {
+     "class": "corrosion",
+     "bbox": [
+      301,
+      151,
+      399,
+      249
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_003.jpg",
+   "defects": [
+    {
+     "class": "scratch",
+     "bbox": [
+      8,
+      27,
+      311,
+      217
+     ]
+    },
+    {
+     "class": "scratch",
+     "bbox": [
+      91,
+      -2,
+      302,
+      135
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_004.jpg",
+   "defects": [
+    {
+     "class": "crack",
+     "bbox": [
+      140,
+      377,
+      205,
+      479
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_005.jpg",
+   "defects": [
+    {
+     "class": "corrosion",
+     "bbox": [
+      177,
+      175,
+      257,
+      255
+     ]
+    },
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      380,
+      296,
+      425,
+      341
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_006.jpg",
+   "defects": [
+    {
+     "class": "missing-head",
+     "bbox": [
+      237,
+      269,
+      271,
+      303
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_007.jpg",
+   "defects": [
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      263,
+      144,
+      313,
+      194
+     ]
+    },
+    {
+     "class": "crack",
+     "bbox": [
+      154,
+      277,
+      216,
+      389
+     ]
+    },
+    {
+     "class": "missing-head",
+     "bbox": [
+      369,
+      354,
+      399,
+      384
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_008.jpg",
+   "defects": [
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      128,
+      77,
+      208,
+      157
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_009.jpg",
+   "defects": [
+    {
+     "class": "missing-head",
+     "bbox": [
+      150,
+      192,
+      176,
+      218
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_010.jpg",
+   "defects": [
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      364,
+      73,
+      426,
+      135
+     ]
+    },
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      366,
+      335,
+      434,
+      403
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_011.jpg",
+   "defects": [
+    {
+     "class": "crack",
+     "bbox": [
+      303,
+      306,
+      395,
+      386
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_012.jpg",
+   "defects": [
+    {
+     "class": "scratch",
+     "bbox": [
+      7,
+      213,
+      361,
+      374
+     ]
+    },
+    {
+     "class": "scratch",
+     "bbox": [
+      44,
+      424,
+      361,
+      482
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_013.jpg",
+   "defects": [
+    {
+     "class": "crack",
+     "bbox": [
+      396,
+      311,
+      432,
+      422
+     ]
+    },
+    {
+     "class": "scratch",
+     "bbox": [
+      52,
+      252,
+      404,
+      286
+     ]
+    },
+    {
+     "class": "corrosion",
+     "bbox": [
+      402,
+      47,
+      500,
+      145
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_014.jpg",
+   "defects": [
+    {
+     "class": "dent",
+     "bbox": [
+      192,
+      216,
+      250,
+      256
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_015.jpg",
+   "defects": [
+    {
+     "class": "corrosion",
+     "bbox": [
+      330,
+      63,
+      412,
+      145
+     ]
+    },
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      384,
+      127,
+      456,
+      196
+     ]
+    },
+    {
+     "class": "scratch",
+     "bbox": [
+      185,
+      -2,
+      475,
+      66
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_016.jpg",
+   "defects": [
+    {
+     "class": "crack",
+     "bbox": [
+      371,
+      98,
+      429,
+      240
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_017.jpg",
+   "defects": [
+    {
+     "class": "crack",
+     "bbox": [
+      152,
+      107,
+      242,
+      193
+     ]
+    },
+    {
+     "class": "dent",
+     "bbox": [
+      374,
+      188,
+      416,
+      226
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_018.jpg",
+   "defects": [
+    {
+     "class": "dent",
+     "bbox": [
+      280,
+      212,
+      324,
+      256
+     ]
+    },
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      288,
+      108,
+      348,
+      168
+     ]
+    },
+    {
+     "class": "missing-head",
+     "bbox": [
+      147,
+      122,
+      173,
+      148
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_019.jpg",
+   "defects": [
+    {
+     "class": "corrosion",
+     "bbox": [
+      181,
+      296,
+      251,
+      366
+     ]
+    },
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      378,
+      316,
+      430,
+      368
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_020.jpg",
+   "defects": [
+    {
+     "class": "corrosion",
+     "bbox": [
+      374,
+      328,
+      464,
+      418
+     ]
+    },
+    {
+     "class": "corrosion",
+     "bbox": [
+      415,
+      195,
+      497,
+      277
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_021.jpg",
+   "defects": [
+    {
+     "class": "corrosion",
+     "bbox": [
+      169,
+      101,
+      269,
+      201
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_022.jpg",
+   "defects": [
+    {
+     "class": "scratch",
+     "bbox": [
+      105,
+      366,
+      389,
+      482
+     ]
+    },
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      401,
+      290,
+      475,
+      364
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_023.jpg",
+   "defects": [
+    {
+     "class": "corrosion",
+     "bbox": [
+      306,
+      197,
+      402,
+      293
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_024.jpg",
+   "defects": [
+    {
+     "class": "dent",
+     "bbox": [
+      445,
+      302,
+      497,
+      344
+     ]
+    },
+    {
+     "class": "crack",
+     "bbox": [
+      257,
+      320,
+      371,
+      373
+     ]
+    },
+    {
+     "class": "scratch",
+     "bbox": [
+      189,
+      336,
+      295,
+      359
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_025.jpg",
+   "defects": [
+    {
+     "class": "corrosion",
+     "bbox": [
+      448,
+      200,
+      522,
+      274
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_026.jpg",
+   "defects": [
+    {
+     "class": "missing-head",
+     "bbox": [
+      328,
+      334,
+      360,
+      366
+     ]
+    },
+    {
+     "class": "crack",
+     "bbox": [
+      331,
+      128,
+      465,
+      221
+     ]
+    },
+    {
+     "class": "crack",
+     "bbox": [
+      458,
+      174,
+      547,
+      283
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_027.jpg",
+   "defects": [
+    {
+     "class": "scratch",
+     "bbox": [
+      117,
+      -2,
+      460,
+      206
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_028.jpg",
+   "defects": [
+    {
+     "class": "corrosion",
+     "bbox": [
+      446,
+      261,
+      522,
+      337
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_029.jpg",
+   "defects": [
+    {
+     "class": "crack",
+     "bbox": [
+      343,
+      138,
+      385,
+      243
+     ]
+    },
+    {
+     "class": "dent",
+     "bbox": [
+      133,
+      225,
+      193,
+      265
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_030.jpg",
+   "defects": [
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      447,
+      302,
+      519,
+      373
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_031.jpg",
+   "defects": [
+    {
+     "class": "scratch",
+     "bbox": [
+      91,
+      463,
+      349,
+      482
+     ]
+    },
+    {
+     "class": "corrosion",
+     "bbox": [
+      82,
+      159,
+      178,
+      255
+     ]
+    },
+    {
+     "class": "scratch",
+     "bbox": [
+      159,
+      -2,
+      387,
+      257
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_032.jpg",
+   "defects": [
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      364,
+      313,
+      423,
+      368
+     ]
+    },
+    {
+     "class": "crack",
+     "bbox": [
+      152,
+      141,
+      227,
+      257
+     ]
+    },
+    {
+     "class": "scratch",
+     "bbox": [
+      208,
+      -2,
+      458,
+      80
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_033.jpg",
+   "defects": [
+    {
+     "class": "scratch",
+     "bbox": [
+      10,
+      -2,
+      327,
+      81
+     ]
+    },
+    {
+     "class": "crack",
+     "bbox": [
+      267,
+      158,
+      367,
+      193
+     ]
+    },
+    {
+     "class": "dent",
+     "bbox": [
+      443,
+      146,
+      489,
+      188
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_034.jpg",
+   "defects": [
+    {
+     "class": "corrosion",
+     "bbox": [
+      189,
+      305,
+      281,
+      397
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_035.jpg",
+   "defects": [
+    {
+     "class": "crack",
+     "bbox": [
+      212,
+      180,
+      302,
+      290
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_036.jpg",
+   "defects": [
+    {
+     "class": "corrosion",
+     "bbox": [
+      141,
+      96,
+      227,
+      182
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_037.jpg",
+   "defects": [
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      111,
+      280,
+      186,
+      352
+     ]
+    },
+    {
+     "class": "missing-head",
+     "bbox": [
+      293,
+      356,
+      327,
+      390
+     ]
+    },
+    {
+     "class": "crack",
+     "bbox": [
+      318,
+      236,
+      471,
+      272
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_038.jpg",
+   "defects": [
+    {
+     "class": "dent",
+     "bbox": [
+      217,
+      257,
+      271,
+      295
+     ]
+    },
+    {
+     "class": "dent",
+     "bbox": [
+      252,
+      292,
+      304,
+      342
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_039.jpg",
+   "defects": [
+    {
+     "class": "dent",
+     "bbox": [
+      397,
+      291,
+      461,
+      343
+     ]
+    },
+    {
+     "class": "missing-head",
+     "bbox": [
+      277,
+      331,
+      305,
+      359
+     ]
+    },
+    {
+     "class": "corrosion",
+     "bbox": [
+      108,
+      308,
+      168,
+      368
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_040.jpg",
+   "defects": [
+    {
+     "class": "corrosion",
+     "bbox": [
+      483,
+      210,
+      539,
+      266
+     ]
+    },
+    {
+     "class": "missing-head",
+     "bbox": [
+      192,
+      190,
+      228,
+      226
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_041.jpg",
+   "defects": [
+    {
+     "class": "missing-head",
+     "bbox": [
+      176,
+      133,
+      208,
+      165
+     ]
+    },
+    {
+     "class": "dent",
+     "bbox": [
+      414,
+      209,
+      474,
+      253
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_042.jpg",
+   "defects": [
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      166,
+      313,
+      212,
+      359
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_043.jpg",
+   "defects": [
+    {
+     "class": "dent",
+     "bbox": [
+      205,
+      314,
+      245,
+      344
+     ]
+    },
+    {
+     "class": "dent",
+     "bbox": [
+      186,
+      319,
+      266,
+      359
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_044.jpg",
+   "defects": [
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      207,
+      286,
+      285,
+      364
+     ]
+    },
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      445,
+      280,
+      529,
+      364
+     ]
+    },
+    {
+     "class": "missing-head",
+     "bbox": [
+      216,
+      103,
+      250,
+      137
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_045.jpg",
+   "defects": [
+    {
+     "class": "dent",
+     "bbox": [
+      188,
+      103,
+      248,
+      139
+     ]
+    },
+    {
+     "class": "dent",
+     "bbox": [
+      341,
+      280,
+      421,
+      330
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_046.jpg",
+   "defects": [
+    {
+     "class": "scratch",
+     "bbox": [
+      188,
+      389,
+      633,
+      470
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_047.jpg",
+   "defects": [
+    {
+     "class": "corrosion",
+     "bbox": [
+      360,
+      338,
+      418,
+      396
+     ]
+    },
+    {
+     "class": "scratch",
+     "bbox": [
+      157,
+      59,
+      502,
+      271
+     ]
+    },
+    {
+     "class": "missing-head",
+     "bbox": [
+      448,
+      191,
+      474,
+      217
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_048.jpg",
+   "defects": [
+    {
+     "class": "crack",
+     "bbox": [
+      360,
+      275,
+      403,
+      450
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_049.jpg",
+   "defects": [
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      300,
+      302,
+      360,
+      362
+     ]
+    },
+    {
+     "class": "missing-head",
+     "bbox": [
+      469,
+      294,
+      503,
+      328
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_050.jpg",
+   "defects": [
+    {
+     "class": "dent",
+     "bbox": [
+      176,
+      271,
+      240,
+      317
+     ]
+    },
+    {
+     "class": "scratch",
+     "bbox": [
+      171,
+      307,
+      306,
+      340
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_051.jpg",
+   "defects": [
+    {
+     "class": "corrosion",
+     "bbox": [
+      420,
+      212,
+      504,
+      296
+     ]
+    },
+    {
+     "class": "missing-head",
+     "bbox": [
+      376,
+      366,
+      402,
+      392
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_052.jpg",
+   "defects": [
+    {
+     "class": "corrosion",
+     "bbox": [
+      461,
+      269,
+      557,
+      365
+     ]
+    },
+    {
+     "class": "scratch",
+     "bbox": [
+      138,
+      181,
+      407,
+      346
+     ]
+    },
+    {
+     "class": "crack",
+     "bbox": [
+      496,
+      358,
+      577,
+      434
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_053.jpg",
+   "defects": [
+    {
+     "class": "corrosion",
+     "bbox": [
+      289,
+      159,
+      355,
+      225
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_054.jpg",
+   "defects": [
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      303,
+      224,
+      352,
+      270
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_055.jpg",
+   "defects": [
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      389,
+      205,
+      449,
+      267
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_056.jpg",
+   "defects": [
+    {
+     "class": "crack",
+     "bbox": [
+      285,
+      334,
+      338,
+      479
+     ]
+    },
+    {
+     "class": "crack",
+     "bbox": [
+      336,
+      333,
+      449,
+      388
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_057.jpg",
+   "defects": [
+    {
+     "class": "missing-head",
+     "bbox": [
+      154,
+      254,
+      188,
+      288
+     ]
+    },
+    {
+     "class": "corrosion",
+     "bbox": [
+      445,
+      71,
+      523,
+      149
+     ]
+    },
+    {
+     "class": "paint-peel-off",
+     "bbox": [
+      358,
+      147,
+      414,
+      203
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_058.jpg",
+   "defects": [
+    {
+     "class": "missing-head",
+     "bbox": [
+      207,
+      120,
+      241,
+      154
+     ]
+    },
+    {
+     "class": "scratch",
+     "bbox": [
+      66,
+      175,
+      160,
+      264
+     ]
+    }
+   ]
+  },
+  {
+   "file": "panel_059.jpg",
+   "defects": [
+    {
+     "class": "missing-head",
+     "bbox": [
+      115,
+      315,
+      141,
+      341
+     ]
+    }
+   ]
+  }
+ ]
+}

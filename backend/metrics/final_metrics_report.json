@@ -1,0 +1,246 @@
+{
+  "generated_at": "2026-08-10T03:53:07Z",
+  "model_performance": {
+    "mAP@0.5": 0.5199,
+    "mAP@0.5:0.95": 0.3059,
+    "average_precision_per_class_by_iou": {
+      "crack": {
+        "0.50": 0.5667989480866011,
+        "0.55": 0.5667989480866011,
+        "0.60": 0.46676587022190574,
+        "0.65": 0.3275463054715484,
+        "0.70": 0.29629630733419354,
+        "0.75": 0.29629630733419354,
+        "0.80": 0.29629630733419354,
+        "0.85": 0.1666666716337204,
+        "0.90": 0.1388888955116272,
+        "0.95": 0.05000000347693767
+      },
+      "dent": {
+        "0.50": 0.6340740898803432,
+        "0.55": 0.45042737116161646,
+        "0.60": 0.45042737116161646,
+        "0.65": 0.3497385869579386,
+        "0.70": 0.3497385869579386,
+        "0.75": 0.3144444695446236,
+        "0.80": 0.19333333710829415,
+        "0.85": 0.1666666716337204,
+        "0.90": 0.0600000032782555,
+        "0.95": 0.02962963139569319
+      },
+      "corrosion": {
+        "0.50": 1.0,
+        "0.55": 1.0,
+        "0.60": 1.0,
+        "0.65": 1.0,
+        "0.70": 0.829931984547855,
+        "0.75": 0.4122807218093323,
+        "0.80": 0.0025062657295163715,
+        "0.85": 0.0,
+        "0.90": 0.0,
+        "0.95": 0.0
+      },
+      "scratch": {
+        "0.50": 0.5714285969734192,
+        "0.55": 0.5714285969734192,
+        "0.60": 0.5714285969734192,
+        "0.65": 0.5714285969734192,
+        "0.70": 0.5714285969734192,
+        "0.75": 0.4920635261824211,
+        "0.80": 0.4126984066078587,
+        "0.85": 0.34523809887468815,
+        "0.90": 0.16666667349636555,
+        "0.95": 0.017316018154610813
+      },
+      "missing_rivet": {
+        "0.50": 0.02083333395421505,
+        "0.55": 0.02083333395421505,
+        "0.60": 0.02083333395421505,
+        "0.65": 0.02083333395421505,
+        "0.70": 0.02083333395421505,
+        "0.75": 0.02083333395421505,
+        "0.80": 0.02083333395421505,
+        "0.85": 0.0,
+        "0.90": 0.0,
+        "0.95": 0.0
+      },
+      "paint_peel_off": {
+        "0.50": 0.3265306148297933,
+        "0.55": 0.3265306148297933,
+        "0.60": 0.3265306148297933,
+        "0.65": 0.3265306148297933,
+        "0.70": 0.2789115774996427,
+        "0.75": 0.2789115774996427,
+        "0.80": 0.2789115774996427,
+        "0.85": 0.21768708542293425,
+        "0.90": 0.1428571492433548,
+        "0.95": 0.0
+      }
+    },
+    "precision_recall_f1_per_class": {
+      "crack": {
+        "precision": 0.75,
+        "recall": 0.6667,
+        "f1_score": 0.7059,
+        "tp": 12,
+        "fp": 4,
+        "fn": 6
+      },
+      "dent": {
+        "precision": 0.65,
+        "recall": 0.8667,
+        "f1_score": 0.7429,
+        "tp": 13,
+        "fp": 7,
+        "fn": 2
+      },
+      "corrosion": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0,
+        "tp": 21,
+        "fp": 0,
+        "fn": 0
+      },
+      "scratch": {
+        "precision": 1.0,
+        "recall": 0.5714,
+        "f1_score": 0.7273,
+        "tp": 12,
+        "fp": 0,
+        "fn": 9
+      },
+      "missing_rivet": {
+        "precision": 0.3333,
+        "recall": 0.0625,
+        "f1_score": 0.1053,
+        "tp": 1,
+        "fp": 2,
+        "fn": 15
+      },
+      "paint_peel_off": {
+        "precision": 0.6429,
+        "recall": 0.4286,
+        "f1_score": 0.5143,
+        "tp": 9,
+        "fp": 5,
+        "fn": 12
+      }
+    },
+    "inference_speed": {
+      "samples": 60,
+      "avg_ms_per_frame": 85.841,
+      "p95_ms_per_frame": 97.192,
+      "fps": 11.65
+    }
+  },
+  "dataset_size": {
+    "total_images": 60,
+    "splits": {
+      "val": {
+        "images": 60,
+        "instances_per_class": {
+          "corrosion": 21,
+          "crack": 18,
+          "dent": 15,
+          "missing_rivet": 16,
+          "paint_peel_off": 21,
+          "scratch": 21
+        },
+        "total_instances": 112
+      }
+    },
+    "total_instances_per_class": {
+      "corrosion": 21,
+      "crack": 18,
+      "dent": 15,
+      "missing_rivet": 16,
+      "paint_peel_off": 21,
+      "scratch": 21
+    }
+  },
+  "system_performance": {
+    "api_latency_ms": {
+      "GET /": {
+        "count": 15,
+        "avg_ms": 2.002,
+        "p95_ms": 3.925,
+        "min_ms": 1.214,
+        "max_ms": 7.023
+      },
+      "GET /models": {
+        "count": 15,
+        "avg_ms": 5.089,
+        "p95_ms": 15.909,
+        "min_ms": 1.455,
+        "max_ms": 44.49
+      },
+      "POST /predict": {
+        "count": 15,
+        "avg_ms": 96.999,
+        "p95_ms": 126.369,
+        "min_ms": 84.297,
+        "max_ms": 164.476
+      },
+      "POST /predict-batch": {
+        "count": 15,
+        "avg_ms": 267.148,
+        "p95_ms": 298.678,
+        "min_ms": 246.027,
+        "max_ms": 302.939
+      }
+    },
+    "realtime_stream": {
+      "frames": 90,
+      "elapsed_seconds": 7.402,
+      "stream_fps": 12.159,
+      "frame_latency": {
+        "count": 90,
+        "avg_ms": 81.42,
+        "p95_ms": 90.825,
+        "min_ms": 72.7,
+        "max_ms": 95.4
+      }
+    },
+    "load_stress": {
+      "requested_concurrent_feeds": 4,
+      "frames_per_feed": 45,
+      "fully_successful_feeds": 4,
+      "max_concurrent_feeds_handled": 4,
+      "uptime_percent": 100.0,
+      "aggregate_stream_fps": 51.514
+    }
+  },
+  "impact_efficiency": {
+    "manual_vs_automated": null,
+    "accuracy_vs_baseline": null,
+    "correctly_flagged_instances": 68
+  },
+  "project_scale": {
+    "generated_at": "2026-08-10T03:52:39Z",
+    "lines_of_code": {
+      "backend_python_loc": 1515,
+      "training_python_loc": 231,
+      "frontend_source_loc": 1405
+    },
+    "api": {
+      "fastapi_endpoint_count": 8
+    },
+    "frontend": {
+      "react_component_count": 6
+    },
+    "training": {
+      "latest_training_summary_path": null,
+      "epochs_configured": null,
+      "epochs_completed": null,
+      "training_time_minutes": null,
+      "hardware": null
+    }
+  },
+  "source_files": {
+    "model_metrics": "backend\\metrics\\model_metrics.json",
+    "system_metrics": "backend\\metrics\\system_metrics.json",
+    "project_scale": "backend\\metrics\\project_scale.json",
+    "impact_baseline": null
+  }
+}

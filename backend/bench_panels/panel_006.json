@@ -1,0 +1,14 @@
+{
+ "file": "panel_006.jpg",
+ "defects": [
+  {
+   "class": "missing-head",
+   "bbox": [
+    237,
+    269,
+    271,
+    303
+   ]
+  }
+ ]
+}

@@ -1,0 +1,5 @@
+{
+  "manual_inspection_seconds_per_image": 45.0,
+  "baseline_map50": 0.2,
+  "notes": "Copy this file to impact_baseline.json and replace values with your real baseline/manual process numbers."
+}

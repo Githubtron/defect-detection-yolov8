@@ -1,0 +1,32 @@
+{
+ "file": "panel_039.jpg",
+ "defects": [
+  {
+   "class": "dent",
+   "bbox": [
+    397,
+    291,
+    461,
+    343
+   ]
+  },
+  {
+   "class": "missing-head",
+   "bbox": [
+    277,
+    331,
+    305,
+    359
+   ]
+  },
+  {
+   "class": "corrosion",
+   "bbox": [
+    108,
+    308,
+    168,
+    368
+   ]
+  }
+ ]
+}

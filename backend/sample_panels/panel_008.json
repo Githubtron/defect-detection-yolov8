@@ -1,0 +1,23 @@
+{
+ "file": "panel_008.jpg",
+ "defects": [
+  {
+   "class": "corrosion",
+   "bbox": [
+    167,
+    200,
+    245,
+    278
+   ]
+  },
+  {
+   "class": "crack",
+   "bbox": [
+    453,
+    215,
+    498,
+    314
+   ]
+  }
+ ]
+}

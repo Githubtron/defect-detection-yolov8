@@ -1,0 +1,23 @@
+{
+ "file": "panel_022.jpg",
+ "defects": [
+  {
+   "class": "scratch",
+   "bbox": [
+    105,
+    366,
+    389,
+    482
+   ]
+  },
+  {
+   "class": "paint-peel-off",
+   "bbox": [
+    401,
+    290,
+    475,
+    364
+   ]
+  }
+ ]
+}

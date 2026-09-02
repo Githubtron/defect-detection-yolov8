@@ -1,0 +1,83 @@
+@import '@fontsource-variable/inter';
+
+:root {
+  --bg: #0a0d12;
+  --panel: #12161d;
+  --panel-alt: #171c24;
+  --border: #232a35;
+  --border-strong: #333f4e;
+
+  --text: #a9b4c2;
+  --text-h: #e7ecf2;
+  --text-dim: #64707f;
+
+  --accent: #3ba7d1;
+  --accent-strong: #63c1e6;
+  --accent-bg: rgba(59, 167, 209, 0.12);
+
+  --warn: #f2a93c;
+  --warn-bg: rgba(242, 169, 60, 0.12);
+  --danger: #e5484d;
+  --danger-bg: rgba(229, 72, 77, 0.12);
+  --success: #35c987;
+  --success-bg: rgba(53, 201, 135, 0.12);
+
+  --sans: 'Inter Variable', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --mono: ui-monospace, Consolas, 'Cascadia Mono', 'SFMono-Regular', monospace;
+
+  font: 15px/1.5 var(--sans);
+  color-scheme: dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background:
+    linear-gradient(var(--bg), var(--bg)),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.015) 0px,
+      rgba(255, 255, 255, 0.015) 1px,
+      transparent 1px,
+      transparent 32px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.015) 0px,
+      rgba(255, 255, 255, 0.015) 1px,
+      transparent 1px,
+      transparent 32px
+    );
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--sans);
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+code {
+  font-family: var(--mono);
+}

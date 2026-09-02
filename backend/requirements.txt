@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+websockets
+ultralytics
+python-multipart
+pillow
+opencv-python-headless
+reportlab
+httpx

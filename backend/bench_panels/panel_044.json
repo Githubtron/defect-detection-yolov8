@@ -1,0 +1,32 @@
+{
+ "file": "panel_044.jpg",
+ "defects": [
+  {
+   "class": "paint-peel-off",
+   "bbox": [
+    207,
+    286,
+    285,
+    364
+   ]
+  },
+  {
+   "class": "paint-peel-off",
+   "bbox": [
+    445,
+    280,
+    529,
+    364
+   ]
+  },
+  {
+   "class": "missing-head",
+   "bbox": [
+    216,
+    103,
+    250,
+    137
+   ]
+  }
+ ]
+}

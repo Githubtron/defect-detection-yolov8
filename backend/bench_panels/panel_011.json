@@ -1,0 +1,14 @@
+{
+ "file": "panel_011.jpg",
+ "defects": [
+  {
+   "class": "crack",
+   "bbox": [
+    303,
+    306,
+    395,
+    386
+   ]
+  }
+ ]
+}

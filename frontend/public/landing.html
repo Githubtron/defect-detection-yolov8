@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DefectVision — Machine Vision for Industrial Surfaces</title>
+<link rel="icon" href="/favicon.svg" />
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  --ink: #0B0C0E;
+  --panel: #101215;
+  --panel-2: #14161A;
+  --line: #232629;
+  --line-soft: #1A1D20;
+  --titanium: #8A9099;
+  --steel: #4A4F57;
+  --cream: #F2EFE8;
+  --cream-dim: #C9C5BB;
+  --orange: #FF5722;
+  --green: #3FB950;
+  --font-head: 'Inter Tight', 'Helvetica Neue', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  --rail: 44px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-head);
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--orange); color: var(--ink); }
+
+a { color: inherit; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+
+/* ============================================================
+   OUTER FRAME — fixed telemetry rails
+   ============================================================ */
+.rail {
+  position: fixed;
+  z-index: 90;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--steel);
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+}
+.rail b { font-weight: 500; color: var(--titanium); }
+.rail .hot { color: var(--orange); }
+.rail .ok { color: var(--green); }
+
+.rail-top {
+  top: 0; left: 0; right: 0;
+  height: var(--rail);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--line-soft);
+  background: rgba(11, 12, 14, 0.86);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.rail-top .seg { display: flex; gap: 26px; align-items: center; }
+.rail-top a { pointer-events: auto; text-decoration: none; color: var(--titanium); transition: color 0.15s ease-out; }
+.rail-top a:hover { color: var(--cream); }
+
+.wordmark {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--cream) !important;
+  text-transform: none;
+}
+.wordmark .chip {
+  width: 15px; height: 15px;
+  background: var(--orange);
+}
+
+.rail-bottom {
+  bottom: 0; left: 0; right: 0;
+  height: var(--rail);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  border-top: 1px solid var(--line-soft);
+  background: rgba(11, 12, 14, 0.86);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.rail-bottom .seg { display: flex; gap: 26px; }
+
+.rail-left, .rail-right {
+  top: 50%;
+  writing-mode: vertical-rl;
+  letter-spacing: 0.22em;
+}
+.rail-left  { left: 14px;  transform: translateY(-50%) rotate(180deg); }
+.rail-right { right: 14px; transform: translateY(-50%); }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 640px;
+  overflow: hidden;
+}
+
+#gl {
+  position: absolute;
+  inset: 0;
+  display: block;
+  z-index: 2; /* above the ghost VISION layer, below the solid copy */
+}
+
+/* ghost copy layer — identical layout, only the outline word visible.
+   Sits BELOW the canvas so the 3D part cuts through 'VISION'. */
+.hero-copy.ghost { z-index: 1; }
+.hero-copy.ghost > * { visibility: hidden; pointer-events: none !important; }
+.hero-copy.ghost h1 .outline { visibility: visible; }
+/* real copy keeps a spacer where VISION sits, so metrics match exactly */
+h1 .outline.spacer { visibility: hidden; }
+
+/* 3D-locked overlays */
+.anchor-layer { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+
+.bbox3d {
+  position: absolute;
+  left: 0; top: 0;
+  width: 118px; height: 74px;
+  border: 1px solid var(--orange);
+  transform: translate(-50%, -50%);
+  will-change: transform;
+  transition: background 0.3s ease-out;
+}
+.bbox3d.locked { background: rgba(255, 87, 34, 0.13); }
+.bbox3d.locked .tag::after { content: ' ▪ LOCK'; }
+.bbox3d .tag {
+  position: absolute;
+  top: -20px; left: -1px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  background: var(--orange);
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+.bbox3d .coord {
+  position: absolute;
+  bottom: -18px; right: -1px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  color: var(--orange);
+  white-space: nowrap;
+}
+
+.datum {
+  position: absolute;
+  left: 0; top: 0;
+  width: 22px; height: 22px;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+.datum::before, .datum::after {
+  content: '';
+  position: absolute;
+  background: var(--cream-dim);
+  opacity: 0.7;
+}
+.datum::before { left: 50%; top: 0; bottom: 0; width: 1px; }
+.datum::after  { top: 50%; left: 0; right: 0; height: 1px; }
+.datum .ring {
+  position: absolute; inset: 4px;
+  border: 1px solid var(--cream-dim);
+  border-radius: 50%;
+  opacity: 0.7;
+}
+.datum .lbl {
+  position: absolute;
+  left: 26px; top: -3px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--cream-dim);
+  white-space: nowrap;
+}
+
+/* headline block */
+.hero-copy {
+  position: absolute;
+  z-index: 10;
+  left: max(64px, 5vw);
+  bottom: 16vh;
+  pointer-events: none;
+}
+.hero-copy > * { pointer-events: auto; }
+
+.hero-kicker {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 22px;
+}
+.hero-kicker::before {
+  content: '';
+  display: inline-block;
+  width: 34px; height: 1px;
+  background: var(--orange);
+  vertical-align: middle;
+  margin-right: 12px;
+}
+
+h1 {
+  font-weight: 900;
+  font-size: clamp(64px, 11.5vw, 178px);
+  line-height: 0.86;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  color: var(--cream);
+}
+h1 .outline {
+  display: block;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--cream);
+}
+
+.hero-sub {
+  max-width: 400px;
+  margin-top: 26px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--titanium);
+}
+.hero-sub b { color: var(--cream); font-weight: 500; }
+
+.cta-row { display: flex; gap: 0; margin-top: 34px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 17px 26px;
+  cursor: pointer;
+  transition: background 0.16s ease-out, color 0.16s ease-out;
+}
+.btn::before { content: '[\00a0'; opacity: 0.65; }
+.btn::after  { content: '\00a0]'; opacity: 0.65; }
+.btn-solid {
+  color: var(--ink);
+  background: var(--orange);
+  border: 1px solid var(--orange);
+}
+.btn-solid:hover { background: var(--cream); border-color: var(--cream); }
+.btn-line {
+  color: var(--cream);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-left: none;
+}
+.btn-line:hover { background: var(--panel-2); }
+
+/* hero right-edge spec block */
+.hero-spec {
+  position: absolute;
+  z-index: 10;
+  right: max(64px, 5vw);
+  bottom: 16vh;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--steel);
+  line-height: 2.1;
+}
+.hero-spec b { color: var(--titanium); font-weight: 500; }
+.hero-spec .big {
+  display: block;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 44px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--cream);
+  margin-bottom: 4px;
+}
+.hero-spec .big small { font-size: 20px; color: var(--titanium); font-weight: 700; }
+
+/* scroll cue */
+.scroll-cue {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  bottom: calc(var(--rail) + 18px);
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--steel);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   TICKER
+   ============================================================ */
+.ticker {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  padding: 13px 0;
+  background: var(--ink);
+}
+.ticker-track {
+  display: flex;
+  gap: 0;
+  width: max-content;
+  animation: tick 30s linear infinite;
+}
+.ticker span {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--titanium);
+  padding: 0 28px;
+  border-right: 1px solid var(--line);
+  white-space: nowrap;
+}
+.ticker span.alt { color: var(--orange); }
+@keyframes tick { to { transform: translateX(-50%); } }
+
+/* ============================================================
+   SECTIONS — editorial grid
+   ============================================================ */
+section {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 130px max(64px, 5vw) 110px;
+}
+
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  gap: 22px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 18px;
+  margin-bottom: 64px;
+}
+.sec-index {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--orange);
+}
+.sec-title {
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cream);
+}
+.sec-meta {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+/* 01 — manifesto */
+.manifesto {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+}
+.manifesto h2 {
+  font-weight: 800;
+  font-size: clamp(34px, 4.4vw, 64px);
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+.manifesto h2 em {
+  font-style: normal;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--cream);
+}
+.manifesto .body { align-self: end; }
+.manifesto p {
+  color: var(--titanium);
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+.manifesto p b { color: var(--cream); font-weight: 600; }
+
+/* 02 — capability spec table */
+.spec-table { border-top: 1px solid var(--line); }
+.spec-row {
+  display: grid;
+  grid-template-columns: 90px 1.1fr 2fr 200px;
+  gap: 30px;
+  align-items: baseline;
+  padding: 30px 0;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  transition: padding-left 0.2s ease-out;
+}
+.spec-row::before {
+  content: '';
+  position: absolute;
+  left: 0; top: -1px; bottom: -1px;
+  width: 0;
+  background: var(--orange);
+  transition: width 0.2s ease-out;
+}
+.spec-row:hover { padding-left: 22px; }
+.spec-row:hover::before { width: 3px; }
+
+.spec-no {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--steel);
+}
+.spec-name {
+  font-weight: 800;
+  font-size: clamp(20px, 2vw, 28px);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+.spec-desc { color: var(--titanium); font-size: 14.5px; line-height: 1.65; }
+.spec-val {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--cream-dim);
+  text-align: right;
+}
+.spec-val .hot { color: var(--orange); }
+
+/* 03 — pipeline */
+.pipe {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+.pipe-cell {
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 34px 30px 40px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+.pipe-num {
+  font-weight: 900;
+  font-size: clamp(56px, 6vw, 92px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--steel);
+  margin-bottom: auto;
+  transition: color 0.2s ease-out, -webkit-text-stroke-color 0.2s ease-out;
+}
+.pipe-cell:hover .pipe-num { color: var(--orange); -webkit-text-stroke-color: var(--orange); }
+.pipe-cell h3 {
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 26px 0 10px;
+}
+.pipe-cell p { color: var(--titanium); font-size: 14px; line-height: 1.65; }
+.pipe-cell .tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--steel);
+  text-transform: uppercase;
+  margin-top: 18px;
+}
+
+/* 04 — datasheet */
+.sheet {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+.sheet-cell {
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 30px 28px 34px;
+}
+.sheet-k {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--steel);
+  margin-bottom: 16px;
+}
+.sheet-v {
+  font-weight: 800;
+  font-size: clamp(30px, 3.2vw, 46px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.sheet-v small { font-size: 0.5em; color: var(--titanium); font-weight: 700; }
+.sheet-v.hot { color: var(--orange); }
+
+/* 05 — giant CTA */
+.launch {
+  padding-top: 150px;
+  padding-bottom: 170px;
+  text-align: left;
+}
+.launch a {
+  display: block;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: clamp(44px, 8.6vw, 132px);
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--cream);
+  transition: color 0.2s ease-out, -webkit-text-stroke-color 0.2s ease-out;
+}
+.launch a:hover { color: var(--orange); -webkit-text-stroke-color: var(--orange); }
+.launch .aside {
+  margin-top: 30px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+.launch .aside b { color: var(--titanium); font-weight: 500; }
+
+footer {
+  border-top: 1px solid var(--line);
+  padding: 26px max(64px, 5vw) calc(26px + var(--rail));
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+footer a { color: var(--titanium); text-decoration: none; }
+footer a:hover { color: var(--cream); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1020px) {
+  .rail-left, .rail-right { display: none; }
+  .hero-spec { display: none; }
+  .datum { display: none; }
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent 34%, rgba(11,12,14,0.66) 72%, rgba(11,12,14,0.92) 100%);
+  }
+  .pipe { grid-template-columns: 1fr; }
+  .sheet { grid-template-columns: 1fr 1fr; }
+  .manifesto { grid-template-columns: 1fr; gap: 34px; }
+  .spec-row { grid-template-columns: 60px 1fr; grid-template-rows: auto auto; }
+  .spec-desc { grid-column: 2; }
+  .spec-val { grid-column: 2; text-align: left; }
+}
+
+@media (max-width: 700px) {
+  section { padding: 84px 22px 70px; }
+  .m-hide { display: none !important; }
+  .rail-top .seg span:not(.wordmark):not([id]) { display: none; }
+  .hero-copy { left: 22px; right: 22px; bottom: 13vh; }
+  .hero-sub { font-size: 14px; }
+  .cta-row { flex-direction: column; }
+  .btn-line { border-left: 1px solid var(--line); border-top: none; }
+  .rail-top .seg.nav-seg { display: none; }
+  .scroll-cue { display: none; }
+  footer { padding-left: 22px; padding-right: 22px; }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .ticker-track { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ OUTER FRAME ══════════ -->
+<div class="rail rail-top">
+  <div class="seg">
+    <a class="wordmark" href="#top"><span class="chip"></span>DefectVision</a>
+    <span>REV 2.4.0</span>
+  </div>
+  <div class="seg nav-seg">
+    <a href="#sys">01 System</a>
+    <a href="#cap">02 Capability</a>
+    <a href="#pipe">03 Pipeline</a>
+    <a href="#data">04 Data</a>
+  </div>
+  <div class="seg">
+    <span><b class="ok">●</b> MODEL ONLINE</span>
+    <span id="t-clock">T+00:00:00</span>
+  </div>
+</div>
+
+<div class="rail rail-bottom">
+  <div class="seg">
+    <span>ROT <b id="t-rot">+0.0° / +0.0°</b></span>
+    <span class="m-hide">CUR <b id="t-cur">0.00 / 0.00</b></span>
+  </div>
+  <div class="seg m-hide">
+    <span>MESH <b id="t-tris">—</b> TRIS</span>
+    <span>FRAME <b id="t-ms">—</b> MS</span>
+    <span>FPS <b id="t-fps" class="hot">—</b></span>
+  </div>
+  <div class="seg">
+    <span class="m-hide">VP <b id="t-vp">—</b></span>
+    <span>SCROLL <b id="t-scroll">000%</b></span>
+  </div>
+</div>
+
+<div class="rail rail-left">DV-2026 // AEROSPACE SURFACE UNIT // BUILD C.7</div>
+<div class="rail rail-right">37.0902°N &nbsp;95.7129°W &nbsp;// &nbsp;SECTOR 3 BAY 12</div>
+
+<!-- ══════════ HERO ══════════ -->
+<div class="hero" id="top">
+  <canvas id="gl" aria-label="Interactive 3D render of a machined turbine disc under inspection"></canvas>
+
+  <div class="anchor-layer">
+    <div class="bbox3d" id="bbox-defect" hidden>
+      <span class="tag">CRACK — 0.964</span>
+      <span class="coord" id="bbox-coord">X+1.208 Y+0.171</span>
+    </div>
+    <div class="datum" id="datum-a" hidden>
+      <span class="ring"></span>
+      <span class="lbl">DATUM A</span>
+    </div>
+  </div>
+
+  <!-- ghost layer: only VISION renders, behind the 3D part -->
+  <div class="hero-copy ghost" aria-hidden="true">
+    <span class="hero-kicker">Machine Vision // Surface Integrity</span>
+    <h1>Defect<span class="outline">Vision</span></h1>
+    <p class="hero-sub">
+      Real-time defect detection for industrial parts.
+      <b>Cracks, corrosion, missing fasteners</b> — localized on the line
+      in milliseconds, with a full audit trail.
+    </p>
+    <div class="cta-row">
+      <span class="btn btn-solid">Launch Live Feed</span>
+      <span class="btn btn-line">System Index</span>
+    </div>
+  </div>
+
+  <div class="hero-copy">
+    <span class="hero-kicker">Machine Vision // Surface Integrity</span>
+    <h1>Defect<span class="outline spacer" aria-hidden="true">Vision</span><span class="sr-only">Vision</span></h1>
+    <p class="hero-sub">
+      Real-time defect detection for industrial parts.
+      <b>Cracks, corrosion, missing fasteners</b> — localized on the line
+      in milliseconds, with a full audit trail.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-solid" href="/?mode=live">Launch Live Feed</a>
+      <a class="btn btn-line" href="#sys">System Index</a>
+    </div>
+  </div>
+
+  <div class="hero-spec" aria-hidden="true">
+    <span class="big">38<small>MS</small></span>
+    <span>MEDIAN SCAN LATENCY</span><br/>
+    <span><b>06</b> DEFECT CLASSES</span><br/>
+    <span><b>4K</b> INPUT / 60 FPS</span><br/>
+    <span><b>ISO-9001</b> AUDIT TRAIL</span>
+  </div>
+
+  <div class="scroll-cue" aria-hidden="true">SCROLL</div>
+</div>
+
+<!-- ══════════ TICKER ══════════ -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="ticker-track">
+    <span>Crack</span><span class="alt">Dent</span><span>Corrosion</span>
+    <span class="alt">Scratch</span><span>Missing-Head</span><span class="alt">Paint-Peel</span>
+    <span>06 Classes</span><span class="alt">38MS Latency</span>
+  </div>
+</div>
+
+<!-- ══════════ 01 SYSTEM ══════════ -->
+<section id="sys">
+  <div class="sec-head">
+    <span class="sec-index">01</span>
+    <span class="sec-title">System</span>
+    <span class="sec-meta">Manifesto / DV-SYS-001</span>
+  </div>
+  <div class="manifesto">
+    <h2>Machine vision<br/>does not <em>blink.</em></h2>
+    <div class="body">
+      <p>
+        Human inspectors are good. They are also tired at hour seven,
+        distracted at hour nine, and absent at 3 AM.
+        <b>DefectVision watches every part, every frame, at the same
+        clinical intensity — forever.</b>
+      </p>
+      <p>
+        One vision pipeline handles stills, batches, and full walkaround
+        video. Every detection carries a class, a confidence score, and
+        coordinates — evidence, not opinion.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 02 CAPABILITY ══════════ -->
+<section id="cap">
+  <div class="sec-head">
+    <span class="sec-index">02</span>
+    <span class="sec-title">Capability</span>
+    <span class="sec-meta">Spec Table / DV-CAP-002</span>
+  </div>
+  <div class="spec-table">
+    <div class="spec-row">
+      <span class="spec-no">002.1</span>
+      <span class="spec-name">Detect</span>
+      <span class="spec-desc">Six structural defect classes — crack, dent, corrosion, scratch, missing fastener head, paint peel — localized with bounding boxes on raw imagery.</span>
+      <span class="spec-val"><span class="hot">06</span> CLASSES</span>
+    </div>
+    <div class="spec-row">
+      <span class="spec-no">002.2</span>
+      <span class="spec-name">Localize</span>
+      <span class="spec-desc">Per-detection coordinates and confidence, rendered on the frame and preserved in the record. No verdict without evidence.</span>
+      <span class="spec-val">CONF <span class="hot">0.00–1.00</span></span>
+    </div>
+    <div class="spec-row">
+      <span class="spec-no">002.3</span>
+      <span class="spec-name">Stream</span>
+      <span class="spec-desc">Single frames, photo batches, or sampled walkaround video — aggregated class counts with the highest-confidence frame surfaced first.</span>
+      <span class="spec-val">IMG / BATCH / <span class="hot">VIDEO</span></span>
+    </div>
+    <div class="spec-row">
+      <span class="spec-no">002.4</span>
+      <span class="spec-name">Report</span>
+      <span class="spec-desc">One click compiles pass/fail status, class breakdown, and annotated evidence into a formatted PDF fit for the maintenance log.</span>
+      <span class="spec-val">PDF / <span class="hot">AUDIT</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 03 PIPELINE ══════════ -->
+<section id="pipe">
+  <div class="sec-head">
+    <span class="sec-index">03</span>
+    <span class="sec-title">Pipeline</span>
+    <span class="sec-meta">Flow / DV-PIP-003</span>
+  </div>
+  <div class="pipe">
+    <div class="pipe-cell">
+      <span class="pipe-num">01</span>
+      <h3>Capture</h3>
+      <p>Frame, batch, or line video enters the queue. Every surface is normalized and staged for scan.</p>
+      <span class="tag">Input → 4K / 60FPS</span>
+    </div>
+    <div class="pipe-cell">
+      <span class="pipe-num">02</span>
+      <h3>Infer</h3>
+      <p>The vision model sweeps each frame and projects bounding boxes over anomalies with calibrated confidence.</p>
+      <span class="tag">Inference → 38MS Median</span>
+    </div>
+    <div class="pipe-cell">
+      <span class="pipe-num">03</span>
+      <h3>Verdict</h3>
+      <p>Pass/fail status, class counts, and annotated evidence compiled into an audit-ready inspection record.</p>
+      <span class="tag">Output → PDF / JSON</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 04 DATA ══════════ -->
+<section id="data">
+  <div class="sec-head">
+    <span class="sec-index">04</span>
+    <span class="sec-title">Data</span>
+    <span class="sec-meta">Sheet / DV-DAT-004</span>
+  </div>
+  <div class="sheet">
+    <div class="sheet-cell"><div class="sheet-k">Median Latency</div><div class="sheet-v hot">38<small>MS</small></div></div>
+    <div class="sheet-cell"><div class="sheet-k">Defect Classes</div><div class="sheet-v">06</div></div>
+    <div class="sheet-cell"><div class="sheet-k">Input Stream</div><div class="sheet-v">4K<small>60</small></div></div>
+    <div class="sheet-cell"><div class="sheet-k">Duty Cycle</div><div class="sheet-v">24<small>/7</small></div></div>
+  </div>
+</section>
+
+<!-- ══════════ 05 LAUNCH ══════════ -->
+<section class="launch">
+  <div class="sec-head">
+    <span class="sec-index">05</span>
+    <span class="sec-title">Deploy</span>
+    <span class="sec-meta">Console / DV-DEP-005</span>
+  </div>
+  <a href="/?mode=live" aria-label="Launch the live inspection console">
+    Launch<br/>Live Feed&nbsp;→
+  </a>
+  <p class="aside">The inspection console is one click away — <b>upload a part image, watch detections land in real time.</b></p>
+</section>
+
+<footer>
+  <span>DefectVision — Industrial Inspection System</span>
+  <span><a href="/">Open Dashboard</a> &nbsp;/&nbsp; DV-2026 · Build C.7</span>
+</footer>
+
+<!-- ══════════ WEBGL ══════════ -->
+<script type="module">
+import * as THREE from '/vendor/three.module.min.js';
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const canvas = document.getElementById('gl');
+const hero = document.querySelector('.hero');
+
+/* ---------- renderer ---------- */
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.02;
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 60);
+camera.position.set(3.4, 2.0, 4.8);
+camera.lookAt(0.4, 0.05, 0);
+
+/* ---------- lights — studio, warm key / cool rim ---------- */
+scene.add(new THREE.HemisphereLight(0xf2efe8, 0x101216, 0.6));
+
+const key = new THREE.DirectionalLight(0xfff2e0, 2.6);
+key.position.set(4, 6, 3);
+key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024);
+key.shadow.camera.left = -3; key.shadow.camera.right = 3;
+key.shadow.camera.top = 3; key.shadow.camera.bottom = -3;
+key.shadow.bias = -0.0004;
+scene.add(key);
+
+const rim = new THREE.DirectionalLight(0xdfe6f0, 1.1);
+rim.position.set(-5, 3.4, -4);
+scene.add(rim);
+
+/* sharp back-right rim — catches machined edges with a crisp highlight */
+const rim2 = new THREE.DirectionalLight(0xffffff, 3.2);
+rim2.position.set(5, 2.3, -4.6);
+scene.add(rim2);
+
+const fill = new THREE.DirectionalLight(0x9099a5, 0.5);
+fill.position.set(0, 1.5, -6);
+scene.add(fill);
+
+/* ---------- materials — matte machined metal ---------- */
+const M = {
+  body: new THREE.MeshStandardMaterial({ color: 0xaab0b8, metalness: 0.8,  roughness: 0.36 }),
+  dark: new THREE.MeshStandardMaterial({ color: 0x686e77, metalness: 0.84, roughness: 0.48 }),
+  hub:  new THREE.MeshStandardMaterial({ color: 0x9298a1, metalness: 0.82, roughness: 0.34 }),
+  bolt: new THREE.MeshStandardMaterial({ color: 0x62686f, metalness: 0.9,  roughness: 0.3  }),
+  hole: new THREE.MeshStandardMaterial({ color: 0x0c0e11, metalness: 0.3,  roughness: 0.92 }),
+  flaw: new THREE.MeshStandardMaterial({ color: 0x241a10, metalness: 0.15, roughness: 1.0 }),
+};
+
+/* ---------- part assembly ---------- */
+const tilt = new THREE.Group();   /* cursor-tracked tilt */
+const part = new THREE.Group();   /* slow auto spin */
+tilt.add(part);
+scene.add(tilt);
+
+function add(mesh, g = part) { mesh.castShadow = true; mesh.receiveShadow = true; g.add(mesh); return mesh; }
+
+/* main disc */
+add(new THREE.Mesh(new THREE.CylinderGeometry(1.55, 1.55, 0.30, 128), M.body));
+/* rim band */
+const rimBand = add(new THREE.Mesh(new THREE.CylinderGeometry(1.62, 1.62, 0.16, 128), M.dark));
+/* web groove ring (recessed look) */
+const groove = add(new THREE.Mesh(new THREE.CylinderGeometry(1.12, 1.12, 0.31, 96), M.dark));
+groove.scale.y = 1.001;
+/* hub riser + cap */
+add(new THREE.Mesh(new THREE.CylinderGeometry(0.52, 0.60, 0.55, 64), M.hub)).position.y = 0.16;
+add(new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.62, 48), M.dark)).position.y = 0.22;
+add(new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.68, 32), M.hole)).position.y = 0.24;
+
+/* turbine blades — angled fins between hub and rim */
+const bladeGeo = new THREE.BoxGeometry(0.045, 0.17, 0.40);
+for (let i = 0; i < 26; i++) {
+  const a = (i / 26) * Math.PI * 2;
+  const blade = add(new THREE.Mesh(bladeGeo, i % 2 ? M.body : M.hub));
+  const r = 0.87;
+  blade.position.set(Math.cos(a) * r, 0.15, Math.sin(a) * r);
+  blade.rotation.y = -a;
+  blade.rotation.x = 0.26; /* pitch */
+}
+
+/* bolt circle — 7 hex heads + 1 empty socket (missing-head defect) */
+const hexGeo = new THREE.CylinderGeometry(0.075, 0.075, 0.07, 6);
+const holeGeo = new THREE.CylinderGeometry(0.07, 0.07, 0.05, 24);
+for (let i = 0; i < 8; i++) {
+  const a = (i / 8) * Math.PI * 2 + Math.PI / 8;
+  const r = 1.32;
+  if (i === 2) {
+    const h = add(new THREE.Mesh(holeGeo, M.hole));
+    h.position.set(Math.cos(a) * r, 0.14, Math.sin(a) * r);
+  } else {
+    const b = add(new THREE.Mesh(hexGeo, M.bolt));
+    b.position.set(Math.cos(a) * r, 0.185, Math.sin(a) * r);
+    b.rotation.y = a;
+  }
+}
+
+/* the flaw — scorched crack notch on the rim top face */
+const flawGeo = new THREE.IcosahedronGeometry(0.11, 1);
+flawGeo.scale(1.6, 0.22, 0.8);
+const FLAW_ANGLE = -0.45;
+const flaw = add(new THREE.Mesh(flawGeo, M.flaw));
+flaw.position.set(Math.cos(FLAW_ANGLE) * 1.34, 0.155, Math.sin(FLAW_ANGLE) * 1.34);
+flaw.rotation.y = -FLAW_ANGLE + 0.5;
+
+/* fake AO — dark contact rings where surfaces meet, deepens the crevices */
+const aoMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.32, depthWrite: false });
+[
+  { r: 0.62, tube: 0.075, y: 0.155 },  /* hub base */
+  { r: 1.12, tube: 0.06,  y: 0.152 },  /* groove edge */
+  { r: 1.47, tube: 0.05,  y: 0.152 },  /* inner rim band */
+  { r: 0.30, tube: 0.045, y: 0.45  },  /* hub cap seat */
+].forEach(({ r, tube, y }) => {
+  const ao = new THREE.Mesh(new THREE.TorusGeometry(r, tube, 6, 96), aoMat);
+  ao.rotation.x = Math.PI / 2;
+  ao.position.y = y;
+  ao.scale.set(1, 1, 0.22); /* flatten against the face */
+  part.add(ao);
+});
+
+/* CAD wireframe overlay — cream edges, low opacity */
+const edgeMat = new THREE.LineBasicMaterial({ color: 0xf2efe8, transparent: true, opacity: 0.10 });
+[
+  new THREE.CylinderGeometry(1.55, 1.55, 0.30, 48),
+  new THREE.CylinderGeometry(1.62, 1.62, 0.16, 48),
+  new THREE.CylinderGeometry(0.52, 0.60, 0.55, 32),
+].forEach((g, idx) => {
+  const e = new THREE.LineSegments(new THREE.EdgesGeometry(g, 12), edgeMat);
+  if (idx === 2) e.position.y = 0.16;
+  part.add(e);
+});
+
+/* scan ring — thin orange hoop sweeping the part vertically */
+const scanRing = new THREE.Mesh(
+  new THREE.TorusGeometry(1.78, 0.0045, 8, 128),
+  new THREE.MeshBasicMaterial({ color: 0xff5722, transparent: true, opacity: 0.55 })
+);
+scanRing.rotation.x = Math.PI / 2;
+tilt.add(scanRing);
+
+/* ground — shadow catcher + faint CAD grid */
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(30, 30),
+  new THREE.ShadowMaterial({ opacity: 0.34 })
+);
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -0.55;
+ground.receiveShadow = true;
+scene.add(ground);
+
+/* perspective grid — canvas texture with radial fade to pure black at the edges */
+function makeGridTexture() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 1024;
+  const g = c.getContext('2d');
+  const cells = 30, step = 1024 / cells;
+  g.strokeStyle = 'rgba(242,239,232,0.6)';
+  g.lineWidth = 1;
+  g.beginPath();
+  for (let i = 0; i <= cells; i++) {
+    g.moveTo(i * step + 0.5, 0); g.lineTo(i * step + 0.5, 1024);
+    g.moveTo(0, i * step + 0.5); g.lineTo(1024, i * step + 0.5);
+  }
+  g.stroke();
+  g.globalCompositeOperation = 'destination-in';
+  const rad = g.createRadialGradient(512, 512, 60, 512, 512, 500);
+  rad.addColorStop(0, 'rgba(0,0,0,1)');
+  rad.addColorStop(0.5, 'rgba(0,0,0,0.5)');
+  rad.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = rad;
+  g.fillRect(0, 0, 1024, 1024);
+  const tex = new THREE.CanvasTexture(c);
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  return tex;
+}
+const gridPlane = new THREE.Mesh(
+  new THREE.PlaneGeometry(26, 26),
+  new THREE.MeshBasicMaterial({ map: makeGridTexture(), transparent: true, opacity: 0.14, depthWrite: false })
+);
+gridPlane.rotation.x = -Math.PI / 2;
+gridPlane.rotation.z = 0.28;      /* diagonal run — reads as raked perspective */
+gridPlane.position.y = -0.548;
+scene.add(gridPlane);
+
+/* ---------- 3D-locked overlays ---------- */
+const bboxEl = document.getElementById('bbox-defect');
+const coordEl = document.getElementById('bbox-coord');
+const datumEl = document.getElementById('datum-a');
+bboxEl.hidden = false;
+datumEl.hidden = false;
+
+const _v = new THREE.Vector3();
+function projectTo(el, obj3d, localOffset) {
+  _v.copy(localOffset);
+  obj3d.localToWorld(_v);
+  _v.project(camera);
+  if (_v.z > 1) { el.style.opacity = '0'; return; }
+  el.style.opacity = '1';
+  const r = canvas.getBoundingClientRect();
+  const x = (_v.x * 0.5 + 0.5) * r.width;
+  const y = (-_v.y * 0.5 + 0.5) * r.height;
+  el.style.transform = 'translate(' + (x - el.offsetWidth / 2) + 'px,' + (y - el.offsetHeight / 2) + 'px)';
+}
+
+/* ---------- telemetry ---------- */
+const T = {
+  rot: document.getElementById('t-rot'),
+  cur: document.getElementById('t-cur'),
+  tris: document.getElementById('t-tris'),
+  ms: document.getElementById('t-ms'),
+  fps: document.getElementById('t-fps'),
+  vp: document.getElementById('t-vp'),
+  scroll: document.getElementById('t-scroll'),
+  clock: document.getElementById('t-clock'),
+};
+const t0 = performance.now();
+
+function fmtClock(ms) {
+  const s = Math.floor(ms / 1000);
+  const hh = String(Math.floor(s / 3600)).padStart(2, '0');
+  const mm = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+  const ss = String(s % 60).padStart(2, '0');
+  return 'T+' + hh + ':' + mm + ':' + ss;
+}
+setInterval(() => { T.clock.textContent = fmtClock(performance.now() - t0); }, 1000);
+
+window.addEventListener('scroll', () => {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const p = max > 0 ? Math.round((window.scrollY / max) * 100) : 0;
+  T.scroll.textContent = String(p).padStart(3, '0') + '%';
+}, { passive: true });
+
+/* ---------- sizing ---------- */
+const baseCam = new THREE.Vector3(3.4, 2.0, 4.8);
+function resize() {
+  const w = hero.clientWidth, h = hero.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  /* pull back on narrow viewports so the part doesn't swallow the copy */
+  const zoomOut = camera.aspect < 0.75 ? 1.5 : (camera.aspect < 1.15 ? 1.28 : 1);
+  baseCam.set(3.4, 2.0, 4.8).multiplyScalar(zoomOut);
+  T.vp.textContent = w + 'x' + h;
+}
+window.addEventListener('resize', resize);
+resize();
+
+/* ---------- interaction state ---------- */
+let tX = 0, tY = 0, cX = 0, cY = 0;   /* target / current tilt */
+let ndcX = 0, ndcY = 0;
+const coarse = window.matchMedia('(pointer: coarse)').matches;
+
+if (!coarse) {
+  window.addEventListener('mousemove', (e) => {
+    ndcX = (e.clientX / window.innerWidth) * 2 - 1;
+    ndcY = (e.clientY / window.innerHeight) * 2 - 1;
+    tY = ndcX * 0.55;
+    tX = ndcY * 0.30;
+  }, { passive: true });
+}
+
+/* pause when hero offscreen or tab hidden */
+let heroVisible = true;
+new IntersectionObserver((entries) => { heroVisible = entries[0].isIntersecting; }, { threshold: 0.02 })
+  .observe(hero);
+
+/* ---------- render loop ---------- */
+let frames = 0, fpsT = performance.now(), lastT = performance.now();
+let ringSide = false, lockT = 0;
+const FLAW_LOCAL = flaw.position.clone().setY(0.17);
+const DATUM_LOCAL = new THREE.Vector3(0, 0.56, 0);
+
+function render(now) {
+  const dt = Math.min((now - lastT) / 1000, 0.05);
+  lastT = now;
+
+  cX += (tX - cX) * 0.055;
+  cY += (tY - cY) * 0.055;
+  tilt.rotation.x = cX;
+  tilt.rotation.y = cY;
+  part.rotation.y += dt * 0.12;
+
+  /* scan ring sweep + target-lock capture when it crosses the flaw plane */
+  const ringY = Math.sin(now * 0.0006) * 0.42 + 0.05;
+  scanRing.position.y = ringY;
+  const side = ringY > 0.155;
+  if (side !== ringSide) {
+    ringSide = side;
+    bboxEl.classList.add('locked');
+    clearTimeout(lockT);
+    lockT = setTimeout(() => bboxEl.classList.remove('locked'), 700);
+  }
+
+  /* scroll dolly — camera pushes in as the hero scrolls away */
+  const heroRect = hero.getBoundingClientRect();
+  const dolly = Math.min(1, Math.max(0, -heroRect.top / (hero.offsetHeight * 0.9)));
+  camera.position.set(
+    baseCam.x - dolly * 0.7,
+    baseCam.y - dolly * 0.35,
+    baseCam.z - dolly * 1.1
+  );
+  camera.lookAt(0.4, 0.05, 0);
+
+  renderer.render(scene, camera);
+
+  projectTo(bboxEl, part, FLAW_LOCAL);
+  projectTo(datumEl, part, DATUM_LOCAL);
+
+  /* telemetry */
+  frames++;
+  if (now - fpsT > 500) {
+    T.fps.textContent = String(Math.round(frames * 1000 / (now - fpsT)));
+    T.ms.textContent = (1000 / Math.max(1, frames * 1000 / (now - fpsT))).toFixed(1);
+    frames = 0; fpsT = now;
+    T.tris.textContent = renderer.info.render.triangles.toLocaleString();
+  }
+  T.rot.textContent =
+    (THREE.MathUtils.radToDeg(tilt.rotation.x) >= 0 ? '+' : '') + THREE.MathUtils.radToDeg(tilt.rotation.x).toFixed(1) + '° / ' +
+    (THREE.MathUtils.radToDeg(part.rotation.y % (Math.PI * 2))).toFixed(1) + '°';
+  T.cur.textContent = ndcX.toFixed(2) + ' / ' + ndcY.toFixed(2);
+
+  const wp = _v.copy(FLAW_LOCAL); part.localToWorld(wp);
+  coordEl.textContent = 'X' + (wp.x >= 0 ? '+' : '') + wp.x.toFixed(3) + ' Y' + (wp.y >= 0 ? '+' : '') + wp.y.toFixed(3);
+}
+
+if (reduceMotion) {
+  /* static single frame; overlays positioned once */
+  const staticFrame = () => {
+    part.rotation.y = 0.9;
+    camera.position.copy(baseCam);
+    camera.lookAt(0.4, 0.05, 0);
+    renderer.render(scene, camera);
+    projectTo(bboxEl, part, FLAW_LOCAL);
+    projectTo(datumEl, part, DATUM_LOCAL);
+  };
+  staticFrame();
+  window.addEventListener('resize', staticFrame);
+  T.fps.textContent = 'STATIC';
+  T.ms.textContent = '0.0';
+  T.tris.textContent = renderer.info.render.triangles.toLocaleString();
+} else {
+  renderer.setAnimationLoop((now) => {
+    if (!heroVisible || document.hidden) return;
+    render(now);
+  });
+}
+
+/* duplicate ticker content for seamless loop */
+const track = document.getElementById('ticker-track');
+track.innerHTML += track.innerHTML;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+ "file": "panel_025.jpg",
+ "defects": [
+  {
+   "class": "corrosion",
+   "bbox": [
+    448,
+    200,
+    522,
+    274
+   ]
+  }
+ ]
+}

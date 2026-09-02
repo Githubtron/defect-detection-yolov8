@@ -1,0 +1,14 @@
+{
+ "file": "panel_006.jpg",
+ "defects": [
+  {
+   "class": "dent",
+   "bbox": [
+    383,
+    223,
+    427,
+    285
+   ]
+  }
+ ]
+}

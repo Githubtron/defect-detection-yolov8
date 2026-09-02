@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-08-10T03:52:39Z",
+  "lines_of_code": {
+    "backend_python_loc": 1515,
+    "training_python_loc": 231,
+    "frontend_source_loc": 1405
+  },
+  "api": {
+    "fastapi_endpoint_count": 8
+  },
+  "frontend": {
+    "react_component_count": 6
+  },
+  "training": {
+    "latest_training_summary_path": null,
+    "epochs_configured": null,
+    "epochs_completed": null,
+    "training_time_minutes": null,
+    "hardware": null
+  }
+}
